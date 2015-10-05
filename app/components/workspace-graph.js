@@ -3,9 +3,11 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   graph: function() {
       var graph = new joint.dia.Graph;
+      var width = 1200;
+      var height = 640;
       var paper = new joint.dia.Paper({
           el: $('#workspace'),
-          width: 2048, height: 640, gridSize: 1,
+          width: width, height: height, gridSize: 10,
           model: graph,
           defaultLink: new joint.dia.Link({
               attrs: { '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z' } }
@@ -30,11 +32,20 @@ export default Ember.Component.extend({
               '.outPorts circle': { fill: '#E74C3C', type: 'output' }
           }
       });
-      graph.addCell(m1);
 
-      var m2 = m1.clone();
-      m2.translate(300, 0);
-      graph.addCell(m2);
-      m2.attr('.label/text', 'Model 2');
+      var clones = [];
+      clones[0] = m1;
+      for(var i = 1; i < 100; i++) {
+        clones[i] = m1.clone().translate(10*i, 0);
+      }
+
+      graph.addCells(clones);
+
+      // for(i=2; i < 1000; i++) {
+      //   var m2 = m1.clone();
+      //   m2.translate(300, 0);
+      //   graph.addCell(m2);
+      //   m2.attr('.label/text', 'Model ' + i);
+      // }
   }.on('didInsertElement')
 });
