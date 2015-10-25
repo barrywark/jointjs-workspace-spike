@@ -87,13 +87,16 @@ export default Ember.Component.extend({
         }
       }),
       validateConnection: function(cellViewS, magnetS, cellViewT, magnetT, end, linkView) {
-        // Prevent loop linking
-        // debugger;
-        return (magnetS !== magnetT) && (magnetT.getAttribute('type') != 'output');
+        // Prevent linking from input ports.
+        if (magnetS && magnetS.getAttribute('type') === 'input') return false;
+        // Prevent linking from output ports to input ports within one element.
+        if (cellViewS === cellViewT) return false;
+        // Prevent linking to input ports.
+        return magnetT && magnetT.getAttribute('type') === 'input';
       },
       // Enable link snapping within 75px lookup radius
       snapLinks: {
-        radius: 75
+        radius: 100
       }
     });
 
